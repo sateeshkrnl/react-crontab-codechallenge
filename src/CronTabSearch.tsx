@@ -1,29 +1,27 @@
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
 
-const minutes_tokens = [0, 59, '*', '-', ','];
+const minutes_tokens = [0, 59, '*', '-', ',','/'];
 //3-45 * 4-45/2 */2 1,2,3
-const regexmin1 = /^\d{1,2}$/;
-const regexmin2 = /^\d{1,2}-\d{1,2}$/;
-const regexmin3 = /^\*$/;
-const regexmin4 = /^(\d{1,2},){0,}$/;
 const parseMinutes = (minutes: string): string[] => {
   const minutestext = [];
-  if (minutes === '*') {
-    minutestext.push('Every Minute');
-  }
+  let minutestemp = minutes;
   if (minutes.includes('/')) {
     const parts = minutes.split('/');
     if (parts.length == 2 && /\d{1,2}/.test(parts[1])) {
       const mindiv = Number(parts[1]);
       minutestext.push(mindiv);
+      minutestemp=parts[0];
     }
   }
+  if (minutestemp === '*') {
+    minutestext.push('Every Minute');
+  }  
   if (
-    minutes.includes('-') &&
-    !minutes.includes(',') &&
-    !minutes.includes('*')
+    minutestemp.includes('-') &&
+    !minutestemp.includes(',') &&
+    !minutestemp.includes('*')
   ) {
-    const parts = minutes.split('-');
+    const parts = minutestemp.split('-');
     if (
       parts.length == 2 &&
       /\d{1,2}/.test(parts[0]) &&
